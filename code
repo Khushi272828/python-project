@@ -1,0 +1,60 @@
+import tkinter as tk
+from tkinter import messagebox
+import random
+import string
+
+def generate_password():
+    length = int(length_var.get())
+    characters = ""
+    if use_uppercase.get(): characters += string.ascii_uppercase
+    if use_lowercase.get(): characters += string.ascii_lowercase
+    if use_numbers.get(): characters += string.digits
+    if use_symbols.get(): characters += string.punctuation
+    
+    if characters:
+        password = "".join(random.choice(characters) for _ in range(length))
+        password_var.set(password)
+    else:
+        messagebox.showwarning("Input Error", "Select at least one character type.")
+
+root = tk.Tk()
+root.title("Password Generator")
+root.geometry("400x300")
+root.config(bg="#2b2b2b")  # Set background color for the entire window
+
+# Define font and color styles
+label_font = ("Helvetica", 12, "bold")
+entry_font = ("Helvetica", 10)
+button_font = ("Helvetica", 10, "bold")
+button_bg = "#4caf50"  # Button background color
+button_fg = "#ffffff"  # Button text color
+
+# Variables
+length_var = tk.IntVar(value=8)
+use_uppercase = tk.BooleanVar(value=True)
+use_lowercase = tk.BooleanVar(value=True)
+use_numbers = tk.BooleanVar(value=True)
+use_symbols = tk.BooleanVar(value=False)
+password_var = tk.StringVar()
+
+# Widgets
+tk.Label(root, text="Password Length:", font=label_font, fg="#ffffff", bg="#2b2b2b").grid(row=0, column=0, sticky="w", padx=10, pady=5)
+tk.Entry(root, textvariable=length_var, font=entry_font, width=10).grid(row=0, column=1, sticky="e", padx=10, pady=5)
+
+tk.Checkbutton(root, text="Include Uppercase", variable=use_uppercase, font=label_font, fg="#ffffff", bg="#2b2b2b", selectcolor="#4caf50").grid(row=1, column=0, columnspan=2, sticky="w", padx=10, pady=2)
+tk.Checkbutton(root, text="Include Lowercase", variable=use_lowercase, font=label_font, fg="#ffffff", bg="#2b2b2b", selectcolor="#4caf50").grid(row=2, column=0, columnspan=2, sticky="w", padx=10, pady=2)
+tk.Checkbutton(root, text="Include Numbers", variable=use_numbers, font=label_font, fg="#ffffff", bg="#2b2b2b", selectcolor="#4caf50").grid(row=3, column=0, columnspan=2, sticky="w", padx=10, pady=2)
+tk.Checkbutton(root, text="Include Symbols", variable=use_symbols, font=label_font, fg="#ffffff", bg="#2b2b2b", selectcolor="#4caf50").grid(row=4, column=0, columnspan=2, sticky="w", padx=10, pady=2)
+
+tk.Button(root, text="Generate Password", command=generate_password, font=button_font, bg=button_bg, fg=button_fg).grid(row=5, column=0, columnspan=2, pady=10)
+
+tk.Entry(root, textvariable=password_var, state="readonly", width=40, font=entry_font, justify="center").grid(row=6, column=0, columnspan=2, padx=10, pady=5)
+
+def copy_to_clipboard():
+    root.clipboard_clear()
+    root.clipboard_append(password_var.get())
+    messagebox.showinfo("Copied", "Password copied to clipboard")
+
+tk.Button(root, text="Copy to Clipboard", command=copy_to_clipboard, font=button_font, bg=button_bg, fg=button_fg).grid(row=7, column=0, columnspan=2, pady=10)
+
+root.mainloop()
